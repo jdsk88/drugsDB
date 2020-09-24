@@ -1,12 +1,62 @@
-import axios from 'axios';
+// import axios from 'axios';
 import express from "express";
 import { Drugs } from '../models/drugs.js';
 const routes = express.Router({});
 
 routes.get('/', function (req, res, next) {
+  console.log(req.query)
   Drugs.find({
     nazwa: {
-      $regex: req.query.nazwa || " ",
+      $regex: req.query.nazwa || "",
+      $options: "-i",
+    },
+    wielkoscOpak: {
+      $regex: req.query.wielkoscOpak || "",
+      $options: "-i",
+    },
+    rodzajPrep: {
+      $regex: req.query.rodzajPrep || "",
+      $options: "-i",
+    },
+    postac: {
+      $regex: req.query.postac || "",
+      $options: "-i",
+    },
+    dawka: {
+      $regex: req.query.dawka || "",
+      $options: "-i",
+    },
+    katalog: {
+      $regex: req.query.katalog || "",
+      $options: "-i",
+    },
+    refund: {
+      $regex: req.query.refund || "",
+      $options: "-i",
+    },
+    substCzynna: {
+      $regex: req.query.substCzynna || "",
+      $options: "-i",
+    },
+    grupaLimit: {
+      $regex: req.query.grupaLimit || "",
+      $options: "-i",
+    },
+    zakrWskazPoza: {
+      $regex: req.query.zakrWskazPoza || "",
+      $options: "-i",
+    }
+
+  })
+    .then((drugs) => {
+      res.send(drugs);
+    });
+});
+routes.get('/one', function (req, res, next) {
+  console.log(req.query)
+  Drugs.findOne({
+    nazwa: {
+      $regex: req.query.nazwa || "",
       $options: "-i",
     }
   })
@@ -15,6 +65,12 @@ routes.get('/', function (req, res, next) {
     });
 });
 
+routes.get('/all', function (req, res, next) {
+  console.log(req.query)
+  Drugs.find().then((drugs) => {
+    res.send(drugs);
+  });
+});
 
 // routes.get("/insert", (req, res) => {
 
