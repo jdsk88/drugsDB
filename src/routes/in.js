@@ -7,15 +7,15 @@ routes.get('/', function (req, res, next) {
   console.log(req.query)
   Drugs.find({
     nazwa: {
-      $regex: req.query.nazwa || "",
+      $regex: req.query.nazwa || " ",
+      $options: "-i",
+    },
+    substCzynna: {
+      $regex: req.query.substCzynna || "",
       $options: "-i",
     },
     wielkoscOpak: {
       $regex: req.query.wielkoscOpak || "",
-      $options: "-i",
-    },
-    rodzajPrep: {
-      $regex: req.query.rodzajPrep || "",
       $options: "-i",
     },
     postac: {
@@ -26,27 +26,6 @@ routes.get('/', function (req, res, next) {
       $regex: req.query.dawka || "",
       $options: "-i",
     },
-    katalog: {
-      $regex: req.query.katalog || "",
-      $options: "-i",
-    },
-    refund: {
-      $regex: req.query.refund || "",
-      $options: "-i",
-    },
-    substCzynna: {
-      $regex: req.query.substCzynna || "",
-      $options: "-i",
-    },
-    grupaLimit: {
-      $regex: req.query.grupaLimit || "",
-      $options: "-i",
-    },
-    zakrWskazPoza: {
-      $regex: req.query.zakrWskazPoza || "",
-      $options: "-i",
-    }
-
   })
     .then((drugs) => {
       res.send(drugs);
@@ -57,6 +36,34 @@ routes.get('/one', function (req, res, next) {
   Drugs.findOne({
     nazwa: {
       $regex: req.query.nazwa || "",
+      $options: "-i",
+    }
+  })
+    .then((drugs) => {
+      res.send(drugs);
+    });
+});
+routes.get('/params', function (req, res, next) {
+  console.log(req.query)
+  Drugs.findOne({
+    rodzajPrep: {
+      $regex: req.query.rodzajPrep || "",
+      $options: "-i",
+    },
+    katalog: {
+      $regex: req.query.katalog || "",
+      $options: "-i",
+    },
+    refund: {
+      $regex: req.query.refund || "",
+      $options: "-i",
+    },
+    grupaLimit: {
+      $regex: req.query.grupaLimit || "",
+      $options: "-i",
+    },
+    zakrWskazPoza: {
+      $regex: req.query.zakrWskazPoza || "",
       $options: "-i",
     }
   })
