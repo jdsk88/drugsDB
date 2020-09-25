@@ -26,3 +26,6 @@ yarn-error.log*
 86k+.json
 get.js
 /client
+/src/routes/drugs.old.js
+/src/routes/products.js
+/src/routes/in.old.js
