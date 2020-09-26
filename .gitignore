@@ -22,8 +22,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+
+posttest.json
+
 10k+.json
 86k+.json
+
+10695_drugs_db.json
+
 get.js
 /client
 /src/routes/drugs.old.js

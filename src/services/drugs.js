@@ -1,6 +1,6 @@
 import { Drugs } from "../models/drugs.js";
 
-export const getAllDrugs = async ({ nazwa, katDostOpak, refund, substCzynna, limit = 10, page = 1 }) => {
+export const getAllDrugs = async ({ nazwa, katDostOpak, substCzynna, wielkoscOpak, postac, limit = 10, page = 1 }) => {
     const skip = (page - 1) * limit;
     return Drugs.find({
         nazwa: {
@@ -15,24 +15,62 @@ export const getAllDrugs = async ({ nazwa, katDostOpak, refund, substCzynna, lim
             $regex: substCzynna || "",
             $options: "-i",
         },
+        wielkoscOpak: {
+            $regex: wielkoscOpak || "",
+            $options: "-i",
+        },
+        postac: {
+            $regex: postac || "",
+            $options: "-i",
+        }
+
     })
         .skip(skip)
         .limit(limit);
 }
-export const getDonatedDrugs = async ({ nazwa, refund, limit = 10, page = 1 }) => {
+export const getDonatedDrugs = async ({ refund, katalog, substCzynna, rodzajPrep, limit = 10, page = 1 }) => {
     const skip = (page - 1) * limit;
     return Drugs.find({
-        nazwa: {
-            $regex: nazwa || "",
-            $options: "-i",
-        },
         refund: {
             $regex: refund || "",
+            $options: "-i",
+        },
+        katalog: {
+            $regex: katalog || "",
+            $options: "-i",
+        },
+        substCzynna: {
+            $regex: substCzynna || "",
+            $options: "-i",
+        },
+        rodzajPrep: {
+            $regex: rodzajPrep || "",
             $options: "-i",
         },
     })
         .skip(skip)
         .limit(limit);
+}
+
+export const getOneDrug = async ({ id }) => {
+    return Drugs.findById(id);
+};
+
+export const createDrug = async ({ sysDateCreated, sysDateUpdated, sysUserId, nazwa, rodzajPrep, nazPowStos, postac, dawka, podmOdpow, typProc, nrPozw, waznPozw, kodAtc, substCzynna, ean, wielkoscOpak, jednWielkOpak, katDostOpak, skasowane, nrEu, dystrRown, nazPostDawka, zawOpak, terminWejscia, okresObowiazDec, grupaLimit, urzCenaZb, cenaHurtBrut, cenaDetal, wysokLimitu, zakrWskazRef, zakrWskazPoza, poziomOdpl, wysokDopl, katalog, refund, }) => {
+    const drug = new Drugs({
+        sysDateCreated, sysDateUpdated, sysUserId, nazwa, rodzajPrep, nazPowStos, postac, dawka, podmOdpow, typProc, nrPozw, waznPozw, kodAtc, substCzynna, ean, wielkoscOpak, jednWielkOpak, katDostOpak, skasowane, nrEu, dystrRown, nazPostDawka, zawOpak, terminWejscia, okresObowiazDec, grupaLimit, urzCenaZb, cenaHurtBrut, cenaDetal, wysokLimitu, zakrWskazRef, zakrWskazPoza, poziomOdpl, wysokDopl, katalog, refund,
+    });
+    return drug.save()
+}
+
+export const updateDrug = async ({ id,  sysDateCreated, sysDateUpdated, sysUserId, nazwa, rodzajPrep, nazPowStos, postac, dawka, podmOdpow, typProc, nrPozw, waznPozw, kodAtc, substCzynna, ean, wielkoscOpak, jednWielkOpak, katDostOpak, skasowane, nrEu, dystrRown, nazPostDawka, zawOpak, terminWejscia, okresObowiazDec, grupaLimit, urzCenaZb, cenaHurtBrut, cenaDetal, wysokLimitu, zakrWskazRef, zakrWskazPoza, poziomOdpl, wysokDopl, katalog, refund, }) => {
+    const drug = Drugs.findById({ id });
+    return drug.update({sysDateCreated, sysDateUpdated, sysUserId, nazwa, rodzajPrep, nazPowStos, postac, dawka, podmOdpow, typProc, nrPozw, waznPozw, kodAtc, substCzynna, ean, wielkoscOpak, jednWielkOpak, katDostOpak, skasowane, nrEu, dystrRown, nazPostDawka, zawOpak, terminWejscia, okresObowiazDec, grupaLimit, urzCenaZb, cenaHurtBrut, cenaDetal, wysokLimitu, zakrWskazRef, zakrWskazPoza, poziomOdpl, wysokDopl, katalog, refund})
+}
+
+export const requestCounter = async ({ id, nazPostDawka}) => {
+    const reqCount = Drugs.findById({id});
+    return reqCount.update({nazPostDawka})
 }
 
 

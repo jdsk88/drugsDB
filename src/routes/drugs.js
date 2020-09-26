@@ -1,74 +1,226 @@
 // import axios from 'axios';
 import express from "express";
 import { Drugs } from '../models/drugs.js';
-import { getAllDrugs, getDonatedDrugs } from "../services/drugs.js";
+import { createDrug, getAllDrugs, getDonatedDrugs, getOneDrug, requestCounter, updateDrug } from "../services/drugs.js";
 const routes = express.Router({});
 
+let requests_counter = 0;
+
 routes.get('/', async (req, res) => {
+  let query = JSON.stringify(req.query);
+  console.log(query)
   console.log(req.query)
   const drugs = await getAllDrugs({
     nazwa: req.query.nazwa,
     substCzynna: req.query.substCzynna,
-    // wielkoscOpak: req.query.wielkoscOpak,
     katDostOpak: req.query.katDostOpak,
-    // postac: req.query.postac,
-    // rodzajPrep: req.query.rodzajPrep,
-    // katalog: req.query.katalog,
-    refund: req.query.refund,
-    // grupaLimit: req.query.grupaLimit,
-    // zakrWskazPoza: req.query.zakrWskazPoza,
+    wielkoscOpak: req.query.wielkoscOpak,
+    postac: req.query.postac,
     limit: parseInt(req.query.limit),
     page: parseInt(req.query.page),
   });
-  res.send(drugs)
+  res.send(drugs + " " + `{ilość_kluczy_${query}:${drugs.length}}`)
+  // console.log(JSON.stringify(drugs))
+  console.log(drugs.length)
 });
+
+routes.post('/', async (req, res) => {
+  console.log(req.query)
+  const { drug_id } = req.params;
+  const {
+    sysDateCreated,
+    sysDateUpdated,
+    sysUserId,
+    nazwa,
+    rodzajPrep,
+    nazPowStos,
+    postac,
+    dawka,
+    podmOdpow,
+    typProc,
+    nrPozw,
+    waznPozw,
+    kodAtc,
+    substCzynna,
+    ean,
+    wielkoscOpak,
+    jednWielkOpak,
+    katDostOpak,
+    skasowane,
+    nrEu,
+    dystrRown,
+    nazPostDawka,
+    zawOpak,
+    terminWejscia,
+    okresObowiazDec,
+    grupaLimit,
+    urzCenaZb,
+    cenaHurtBrut,
+    cenaDetal,
+    wysokLimitu,
+    zakrWskazRef,
+    zakrWskazPoza,
+    poziomOdpl,
+    wysokDopl,
+    katalog,
+    refund } = req.body;
+  const addDrug = await createDrug({
+    id: drug_id,
+    sysDateCreated,
+    sysDateUpdated,
+    sysUserId,
+    nazwa,
+    rodzajPrep,
+    nazPowStos,
+    postac,
+    dawka,
+    podmOdpow,
+    typProc,
+    nrPozw,
+    waznPozw,
+    kodAtc,
+    substCzynna,
+    ean,
+    wielkoscOpak,
+    jednWielkOpak,
+    katDostOpak,
+    skasowane,
+    nrEu,
+    dystrRown,
+    nazPostDawka,
+    zawOpak,
+    terminWejscia,
+    okresObowiazDec,
+    grupaLimit,
+    urzCenaZb,
+    cenaHurtBrut,
+    cenaDetal,
+    wysokLimitu,
+    zakrWskazRef,
+    zakrWskazPoza,
+    poziomOdpl,
+    wysokDopl,
+    katalog,
+    refund
+  });
+  res.send(addDrug);
+  console.log(addDrug)
+});
+
 routes.get('/donated', async (req, res) => {
   console.log(req.query)
   const donatedDrugs = await getDonatedDrugs({
     nazwa: req.query.nazwa,
-    // substCzynna: req.query.substCzynna,
-    // wielkoscOpak: req.query.wielkoscOpak,
-    // katDostOpak: req.query.katDostOpak,
-    // postac: req.query.postac,
-    // rodzajPrep: req.query.rodzajPrep,
-    // katalog: req.query.katalog,
+    substCzynna: req.query.substCzynna,
+    rodzajPrep: req.query.rodzajPrep,
+    katalog: req.query.katalog,
     refund: req.query.refund,
-    // grupaLimit: req.query.grupaLimit,
-    // zakrWskazPoza: req.query.zakrWskazPoza,
     limit: parseInt(req.query.limit),
     page: parseInt(req.query.page),
   });
   res.send(donatedDrugs)
+  // console.log(donatedDrugs)
+
 });
 
-// routes.get('/params', function (req, res, next) {
-//   console.log(req.query)
-//   Drugs.find({
-//     rodzajPrep: {
-//       $regex: req.query.rodzajPrep || "",
-//       $options: "-i",
-//     },
-//     katalog: {
-//       $regex: req.query.katalog || "",
-//       $options: "-i",
-//     },
-//     refund: {
-//       $regex: req.query.refund || "",
-//       $options: "-i",
-//     },
-//     grupaLimit: {
-//       $regex: req.query.grupaLimit || "",
-//       $options: "-i",
-//     },
-//     zakrWskazPoza: {
-//       $regex: req.query.zakrWskazPoza || "",
-//       $options: "-i",
-//     }
-//   })
-//     .then((drugs) => {
-//       res.send(drugs);
-//     });
-// });
+routes.get('/:drug_id', async (req, res) => {
+  requests_counter++;
+  console.log(req.query)
+  const { drug_id } = req.params;
+  const oneDrugById = await getOneDrug({ id: drug_id });
+  console.log("Get by ID : " + drug_id + " | " + requests_counter);
+  res.send(oneDrugById);
+});
+
+
+routes.put('/:drug_id', async (req, res) => {
+  // requests_counter++;
+  // console.log("Get by ID : "+requests_counter);
+  console.log(req.query);
+
+  const { drug_id } = req.params;
+  const {
+    sysDateCreated,
+    sysDateUpdated,
+    sysUserId,
+    nazwa,
+    rodzajPrep,
+    nazPowStos,
+    postac,
+    dawka,
+    podmOdpow,
+    typProc,
+    nrPozw,
+    waznPozw,
+    kodAtc,
+    substCzynna,
+    ean,
+    wielkoscOpak,
+    jednWielkOpak,
+    katDostOpak,
+    skasowane,
+    nrEu,
+    dystrRown,
+    nazPostDawka,
+    zawOpak,
+    terminWejscia,
+    okresObowiazDec,
+    grupaLimit,
+    urzCenaZb,
+    cenaHurtBrut,
+    cenaDetal,
+    wysokLimitu,
+    zakrWskazRef,
+    zakrWskazPoza,
+    poziomOdpl,
+    wysokDopl,
+    katalog,
+    refund } = req.body;
+  const upDrug = await updateDrug({
+    id: drug_id,
+    sysDateCreated,
+    sysDateUpdated,
+    sysUserId,
+    nazwa,
+    rodzajPrep,
+    nazPowStos,
+    postac,
+    dawka,
+    podmOdpow,
+    typProc,
+    nrPozw,
+    waznPozw,
+    kodAtc,
+    substCzynna,
+    ean,
+    wielkoscOpak,
+    jednWielkOpak,
+    katDostOpak,
+    skasowane,
+    nrEu,
+    dystrRown,
+    nazPostDawka,
+    zawOpak,
+    terminWejscia,
+    okresObowiazDec,
+    grupaLimit,
+    urzCenaZb,
+    cenaHurtBrut,
+    cenaDetal,
+    wysokLimitu,
+    zakrWskazRef,
+    zakrWskazPoza,
+    poziomOdpl,
+    wysokDopl,
+    katalog,
+    refund
+  });
+  res.send(upDrug);
+  console.log(upDrug)
+});
+
+
+
 
 
 // routes.get("/insert", (req, res) => {

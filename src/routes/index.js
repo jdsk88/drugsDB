@@ -1,5 +1,5 @@
 import express from "express";
-import drugs from './in.js';
+import drugs from './drugs.js';
 
 
 const routes = express.Router({});
